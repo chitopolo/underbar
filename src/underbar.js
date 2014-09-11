@@ -99,13 +99,16 @@ var _ = {};
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+   
     var truthy = [];
-    for(var i =0 ; i<collection.length;i++){
-      if(test(collection[i])){
-        truthy.push(collection[i]);
+    _.each(collection, function(val){
+       if(test(val)){
+        truthy.push(val);
       }
-    }
+    });
     return truthy;
+
+
 
   };
 
@@ -113,19 +116,22 @@ var _ = {};
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var notWant = _.filter(collection, test);
-    // console.log(notWant);
-    var wanted = [];
-    for(var i = 0; i<collection.length; i++){
-
-    }
-    
-    return wanted;
+  return _.filter(collection, function(val){
+    return !test(val);
+   })
 
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var uni = [];
+    _.each(array, function(number){
+        if(_.indexOf(uni, number)===-1){
+            uni.push(number);
+        }
+    })
+    return uni; 
+    
   };
 
 
@@ -134,6 +140,11 @@ var _ = {};
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var results = [];
+    _.each(collection, function(val){
+      results.push(iterator(val));
+    })
+    return results;
   };
 
   /*
@@ -157,6 +168,14 @@ var _ = {};
   // Calls the method named by functionOrKey on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    return _.map(collection, function(val){
+      if(typeof(functionOrKey)==='function'){
+      return functionOrKey.apply(val);
+      }else{
+       
+        return val[functionOrKey].apply(val);
+      }
+    })
   };
 
   // Reduces an array or object to a single value by repetitively calling
