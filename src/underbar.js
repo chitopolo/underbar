@@ -237,7 +237,9 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-     iterator = iterator || function(variable){return Boolean(variable);};
+    iterator = iterator || function(variable){
+      return Boolean(variable);
+    };
     return !_.every(collection,function(item){
       return !iterator(item);
     });
@@ -263,11 +265,30 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var args = [].slice.call(arguments, 1);
+    _.each(args,function(val){
+      for (var item in val){
+        obj[item] = val[item];
+      }
+    })
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var args = [].slice.call(arguments, 1);
+    _.each(args,function(val){
+      for (var item in val){
+        if(!obj.hasOwnProperty(item)){
+          obj[item] = val[item];  
+        }
+        
+      }
+    })
+    return obj;
+
+
   };
 
 
@@ -309,6 +330,13 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var memos = {};
+    return function(primitive){
+      if (!memos.hasOwnProperty(primitive)){
+        memos[primitive] = func(primitive);
+      }
+      return memos[primitive];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -318,6 +346,9 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [].slice.call(arguments, 2);
+    console.log(args);
+    return setTimeout(function(){func.apply(null, args)},wait);
   };
 
 
@@ -332,6 +363,7 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    
   };
 
 
